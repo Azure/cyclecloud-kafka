@@ -1,0 +1,211 @@
+######################################
+## Kafka Cluster Configuration File ##
+######################################
+
+[cluster Kafka]
+FormLayout = selectionpanel
+IconUrl = https://github.com/CycleCloud/kafka/raw/master/icon.png
+Category = Infrastructure
+Autoscale = false
+
+    [[node defaults]]
+    Credentials = $Credentials    
+    ImageName = $ImageName
+    SubnetId = $SubnetId
+    Region = $Region
+    KeyPairLocation = $KeyPairLocation
+    
+        [[[configuration]]]
+        cyclecloud.discoverable = true
+
+        [[[cluster-init cyclecloud/zookeeper:default:$ZookeeperProjectVersion]]]
+        [[[cluster-init cyclecloud/kafka:default:$ProjectVersion]]]
+
+     [[node proxy]]
+     IsReturnProxy = $ReturnProxy
+     MachineType = $ProxyMachineType
+
+         [[[configuration]]]
+         run_list = recipe[cshared::directories], recipe[cuser], recipe[cshared::server], recipe[cganglia::server], recipe[cganglia::client]
+
+         [[[input-endpoint ganglia]]]
+         PrivatePort = 8652
+         PublicPort = 8652        
+
+        [[[network-interface eth0]]]
+        AssociatePublicIpAddress = $UsePublicNetwork
+
+        [[[cluster-init cyclecloud/kafka:client:$ProjectVersion]]]
+	
+     [[nodearray broker]]
+     MachineType = $BrokerMachineType
+     InitialCount = $EnsembleSize
+     AdditionalClusterInitSpecs = $BrokerClusterInitSpecs
+
+         [[[network-interface]]]
+         AssociatePublicIpAddress = false
+
+        [[[configuration]]]
+        run_list = recipe[cshared::client], recipe[cuser], recipe[cganglia::client]
+	
+        zookeeper.mode = ensemble
+        zookeeper.ensemble_size = $EnsembleSize
+
+        kafka.version = 0.10.1.0
+        kafka.scala_version = 2.11
+        kafka.checksum = 6d9532ae65c9c8126241e7b928b118aaa3a694dab08069471f0e61f4f0329390
+        kafka.md5_checksum = 45c7d032324e16c2e19a7d904a4d65c6
+        # Auto-assign the broker id (manual assignment allows range [0..1000]
+        kafka.broker.id = -1
+        kafka.broker.hostname = localhost
+        kafka.broker.port = 9092
+        kafka.init_style = systemd
+        kafka.automatic_start = true
+        kafka.automatic_restart = false
+    
+        [[[network-interface]]]
+        AssociatePublicIpAddress = $UsePublicNetworkBrokers
+
+         [[[input-endpoint kafka]]]
+         PrivatePort = 9092
+         PublicPort = 9092       
+
+        [[[cluster-init cyclecloud/zookeeper:server:$ZookeeperProjectVersion]]]
+        [[[cluster-init cyclecloud/kafka:broker:$ProjectVersion]]]
+
+
+[parameters About]
+Order = 1
+
+    [[parameters About Kafka]]
+
+        [[[parameter KafkaInfo]]]
+        HideLabel = true
+        Config.Plugin = pico.widget.HtmlTemplateWidget
+        Config.Template := "<table><tr><td><img src='https://github.com/CycleCloud/kafka/raw/master/icon.png' width='192' height='192'></td></tr><tr><td><p>This cluster installs a basic Kafka ensemble.</p><br><p>See the <a href=\"https://kafka.apache.org/\" target=\"_blank\">Kafka project site</a> for an overview.</p></td></tr></table>"
+
+        [[[parameter Readme]]]
+        HideLabel = true
+        Config.Plugin = pico.widget.HtmlTemplateWidget
+        Config.Template := "Follow the instructions in the <a href=\"https://github.com/CycleCloudCommunity/kafka/\" target=\"_blank\">README</a> for details on instructions on extending and configuring the Project for your environment."
+
+[parameters Required Settings]
+Order = 10
+
+    [[parameters Virtual Machines ]]
+    Description = "The cluster, in this case, has two roles: the return proxy node and the kafka broker / zookeeper ensemble hosts. Configure which instance types to use based on the requirements of your application.  The proxy host may be used to enable firewall traversal between the cluster and CycleCloud.   In VPC environments with virtual network, this node is not required."
+    Order = 20
+
+        [[[parameter Region]]]
+        Label = Region
+        Description = Deployment Location
+        ParameterType = Cloud.Region
+        DefaultValue = westus2
+
+        [[[parameter ProxyMachineType]]]
+        Label = Proxy
+        Description = The machine type for the optional proxy host
+        ParameterType = Cloud.MachineType
+        DefaultValue = Standard_DS4_v2 
+
+
+       [[[parameter BrokerMachineType]]]
+       Label = Broker
+       Description = The machine type for the Kafka brokers
+       ParameterType = Cloud.MachineType
+       DefaultValue = Standard_DS4_v2 
+
+
+    [[parameters Networking]]
+    Order = 40
+
+        [[[parameter SubnetId]]]
+        Label = Subnet ID
+        Description = Subnet Resource Path (ResourceGroup/VirtualNetwork/Subnet)
+        ParameterType = Azure.Subnet
+        Required = True
+
+
+[parameters Advanced Settings]
+Order = 20
+
+    [[parameters Azure Settings]]
+    Order = 10 
+
+        [[[parameter Credentials]]]
+        Description = The credentials for the cloud provider
+        ParameterType = Cloud.Credentials
+
+
+     [[parameters Kafka]]
+     Description = Adjust the ZooKeeper cluster size.  Ensemble Size >= 3 required for fault tolerance (max: 10).
+     Order = 20
+     
+        [[[parameter ProjectVersion]]]
+        Label = Project Version
+        DefaultValue = 1.4.0
+        Description = Select the Kafka project version
+        Hidden = true
+
+        [[[parameter ZookeeperProjectVersion]]]
+        Label = ZK Project Version
+        DefaultValue = 1.6.0
+        Description = Select the Zookeeper project version
+        Hidden = true
+
+        [[[parameter EnsembleSize]]]
+        Label = Ensemble Size
+        Description = The number of ZooKeeper ensemble members to start initially.  (Quorum Size = ceil(EnsembleSize/2))
+        DefaultValue = 3
+        Config.Plugin = pico.form.NumberTextBox
+        Config.MinValue = 1
+        Config.MaxValue = 10
+        Config.IntegerOnly = true
+
+
+    [[parameters Software]]
+    Description = "Specify the scheduling software, and base OS installed on all nodes, and optionally the cluster-init and chef versions from your Locker."
+    Order = 10
+
+        [[[parameter ImageName]]]
+        Label = Base OS
+        ParameterType = Cloud.Image
+        Config.OS = linux
+        DefaultValue = cycle.image.centos7
+
+        [[[parameter BrokerClusterInitSpecs]]]
+        Label = Broker Cluster-Init Specs
+        Description = Cluster init specs to apply to all brokers
+        ParameterType = Cloud.ClusterInitSpecs
+
+
+    [[parameters Advanced Networking]]
+    Description = Advanced networking settings
+
+        [[[parameter ReturnProxy]]]
+        Label = Return Proxy
+        DefaultValue = false
+        ParameterType = Boolean
+        Config.Label = Use SSH tunnel to connect to CycleCloud (required if direct access is blocked)
+
+        [[[parameter UsePublicNetwork]]]
+        Label = Public Head Node
+        DefaultValue = true
+        ParameterType = Boolean
+        Config.Label = Access proxy node from the Internet
+
+        [[[parameter UsePublicNetworkBrokers]]]
+        Label = Public Broker Ensemble
+        DefaultValue = false
+        ParameterType = Boolean
+        Config.Label = Access brokers directly from the Internet
+
+        [[[parameter KeyPairLocation]]]
+        Label = Keypair Path
+        Description = The path to the private SSH key to use for the `cyclecloud` user on linux nodes.
+        DefaultValue = ~/.ssh/cyclecloud.pem
+        Required = True
+
+
+
+

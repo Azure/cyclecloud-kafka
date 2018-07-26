@@ -4,7 +4,7 @@
 
 [cluster Kafka]
 FormLayout = selectionpanel
-IconUrl = https://github.com/CycleCloud/kafka/raw/master/icon.png
+IconUrl = https://github.com/Azure/cyclecloud-kafka/raw/master/icon.png
 Category = Infrastructure
 Autoscale = false
 
@@ -82,12 +82,12 @@ Order = 1
         [[[parameter KafkaInfo]]]
         HideLabel = true
         Config.Plugin = pico.widget.HtmlTemplateWidget
-        Config.Template := "<table><tr><td><img src='https://github.com/CycleCloud/kafka/raw/master/icon.png' width='192' height='192'></td></tr><tr><td><p>This cluster installs a basic Kafka ensemble.</p><br><p>See the <a href=\"https://kafka.apache.org/\" target=\"_blank\">Kafka project site</a> for an overview.</p></td></tr></table>"
+        Config.Template := "<table><tr><td><img src='https://github.com/Azure/cyclecloud-kafka/raw/master/icon.png' width='192' height='192'></td></tr><tr><td><p>This cluster installs a basic Kafka ensemble.</p><br><p>See the <a href=\"https://kafka.apache.org/\" target=\"_blank\">Kafka project site</a> for an overview.</p></td></tr></table>"
 
         [[[parameter Readme]]]
         HideLabel = true
         Config.Plugin = pico.widget.HtmlTemplateWidget
-        Config.Template := "Follow the instructions in the <a href=\"https://github.com/CycleCloudCommunity/kafka/\" target=\"_blank\">README</a> for details on instructions on extending and configuring the Project for your environment."
+        Config.Template := "Follow the instructions in the <a href=\"https://github.com/Azure/cyclecloud-kafka/\" target=\"_blank\">README</a> for details on instructions on extending and configuring the Project for your environment."
 
 [parameters Required Settings]
 Order = 10

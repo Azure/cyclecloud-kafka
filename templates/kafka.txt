@@ -4,7 +4,6 @@
 
 [cluster Kafka]
 FormLayout = selectionpanel
-IconUrl = https://github.com/Azure/cyclecloud-kafka/raw/master/icon.png
 Category = Infrastructure
 Autoscale = false
 
@@ -13,7 +12,8 @@ Autoscale = false
     ImageName = $ImageName
     SubnetId = $SubnetId
     Region = $Region
-    KeyPairLocation = $KeyPairLocation
+    KeyPairLocation = ~/.ssh/cyclecloud.pem
+    UsePublicNetwork = $UsePublicNetwork
     
         [[[configuration]]]
         cyclecloud.discoverable = true
@@ -184,7 +184,7 @@ Order = 20
 
         [[[parameter ReturnProxy]]]
         Label = Return Proxy
-        DefaultValue = false
+        DefaultValue = true
         ParameterType = Boolean
         Config.Label = Use SSH tunnel to connect to CycleCloud (required if direct access is blocked)
 
@@ -199,13 +199,4 @@ Order = 20
         DefaultValue = false
         ParameterType = Boolean
         Config.Label = Access brokers directly from the Internet
-
-        [[[parameter KeyPairLocation]]]
-        Label = Keypair Path
-        Description = The path to the private SSH key to use for the `cyclecloud` user on linux nodes.
-        DefaultValue = ~/.ssh/cyclecloud.pem
-        Required = True
-
-
-
 

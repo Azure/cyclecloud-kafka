@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT License.
+
 # Kafka Cluster for clients to use
 default['kafka']['cluster_name'] = node['cyclecloud']['cluster']['id']
 

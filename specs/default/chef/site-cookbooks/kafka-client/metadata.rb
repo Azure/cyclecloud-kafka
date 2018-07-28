@@ -1,3 +1,7 @@
+# Copyright (C) 2016 Cycle Computing LLC
+#
+# All rights reserved - Do Not Redistribute
+
 name             'kafka-client'
 maintainer       'Cycle Computing LLC'
 maintainer_email 'suppport@cyclecomputing.com'

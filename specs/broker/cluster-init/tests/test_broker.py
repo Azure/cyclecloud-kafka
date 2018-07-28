@@ -1,3 +1,7 @@
+# Copyright (C) 2016 Cycle Computing LLC
+#
+# All rights reserved - Do Not Redistribute
+
 import unittest
 import subprocess
 import time

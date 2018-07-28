@@ -5,6 +5,9 @@
 # For Kafka Clients that do not require the full Kafka cookbook.
 # The basic Kafka Client recipe simply makes the broker hostlist available
 # to client applications via jetpack or via a conf file.
+#
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT License.
 
 kafka_cluster = node['kafka']['cluster_name']
 brokers = cluster.search(:clusterUID => kafka_cluster, :recipe => "kafka::default").select {|n| not n['kafka'].nil? and not n['kafka']['broker']['port'].nil?}.map  do |n|

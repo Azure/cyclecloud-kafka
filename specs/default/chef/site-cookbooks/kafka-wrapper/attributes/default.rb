@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT License.
+
 # this value cannot be set via a cluster template because it has
 # a '.' in the attribute name 'zookeeper.connect'
 default['kafka']['broker']['zookeeper.connect'] = %w[localhost:2181]

@@ -175,7 +175,7 @@ Order = 20
         DefaultValue = cycle.image.centos7
 
         [[[parameter BrokerClusterInitSpecs]]]
-        Label = Broker Cluster-Init Specs
+        Label = Broker Cluster-Init
         Description = Cluster init specs to apply to all brokers
         ParameterType = Cloud.ClusterInitSpecs
 
@@ -196,7 +196,7 @@ Order = 20
         Config.Label = Access proxy node from the Internet
 
         [[[parameter UsePublicNetworkBrokers]]]
-        Label = Public Broker Ensemble
+        Label = Public Broker
         DefaultValue = false
         ParameterType = Boolean
         Config.Label = Access brokers directly from the Internet

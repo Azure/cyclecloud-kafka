@@ -1,11 +1,7 @@
-# Copyright (C) 2016 Cycle Computing LLC
-#
-# All rights reserved - Do Not Redistribute
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT License.
 
 name             'kafka-client'
-maintainer       'Cycle Computing LLC'
-maintainer_email 'suppport@cyclecomputing.com'
-license          'All rights reserved'
 description      'Provides lightweight Kafka discovery for clients the do not require the full kafka installation from the kafka cookbook.'
 version          '1.0.0'
 

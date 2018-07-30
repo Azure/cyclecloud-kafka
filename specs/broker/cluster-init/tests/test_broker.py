@@ -1,6 +1,5 @@
-# Copyright (C) 2016 Cycle Computing LLC
-#
-# All rights reserved - Do Not Redistribute
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT License.
 
 import unittest
 import subprocess
